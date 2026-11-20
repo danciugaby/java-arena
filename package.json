@@ -1,0 +1,13 @@
+{
+  "name": "java-arena",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Java Arena: Java programming challenges that run in the browser, built on the course chapters",
+  "scripts": {
+    "build": "./build-mj.sh && python3 build.py",
+    "test": "node test/run.js && node test/run.js test/cases2.txt && node test/challenges-test.js && node test/games-test.js"
+  },
+  "devDependencies": {
+    "codemirror": "5.65.21"
+  }
+}

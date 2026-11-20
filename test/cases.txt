@@ -1,0 +1,1135 @@
+=== basics arithmetic
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int a = 7, b = 2;
+        System.out.println(a / b);
+        System.out.println(a % b);
+        System.out.println(a / 2.0);
+        double d = 3;
+        System.out.println(d);
+        System.out.println(10 / 4 * 4);
+        System.out.println(1 + 2 + "3" + 4 + 5);
+        System.out.println('a' + 1);
+        System.out.println((char) ('a' + 1));
+        System.out.println(0.1 + 0.2);
+        System.out.println(100.0 / 3);
+        System.out.println(1e7);
+        System.out.println(0.0001);
+        System.out.println(-7 / 2);
+        System.out.println(-7 % 3);
+        System.out.println(Integer.MAX_VALUE);
+        int x = Integer.MAX_VALUE;
+        x++;
+        System.out.println(x);
+        long big = 1L * 1024 * 1024 * 1024 * 1024;
+        System.out.println(big);
+        System.out.println((int) 3.99);
+        System.out.println((int) -3.99);
+        System.out.println(Math.round(2.5) + " " + Math.round(-2.5));
+        System.out.println(5 == 5.0);
+    }
+}
+--- out
+3
+1
+3.5
+3.0
+8
+3345
+98
+b
+0.30000000000000004
+33.333333333333336
+1.0E7
+1.0E-4
+-3
+-1
+2147483647
+-2147483648
+1099511627776
+3
+-3
+3 -2
+true
+=== strings
+--- src
+public class Main {
+    public static void main(String[] args) {
+        String s = "Hello, Java";
+        System.out.println(s.length());
+        System.out.println(s.charAt(7));
+        System.out.println(s.substring(7));
+        System.out.println(s.substring(0, 5).toUpperCase());
+        System.out.println(s.indexOf("Java") + " " + s.indexOf('z'));
+        System.out.println(s.contains("lo, J"));
+        System.out.println("apple".compareTo("banana"));
+        System.out.println("b".compareTo("a"));
+        System.out.println("abc".compareTo("abcde"));
+        System.out.println(String.join("-", "a", "b", "c"));
+        System.out.println("  hi  ".trim() + "|");
+        System.out.println("ab".repeat(3));
+        String[] parts = "a,b,,c,,".split(",");
+        System.out.println(parts.length);
+        System.out.println(java.util.Arrays.toString("1 2  3".split("\\s+")));
+        StringBuilder sb = new StringBuilder("abc");
+        sb.append(1).append('x').reverse();
+        System.out.println(sb);
+        System.out.println("Java".equals("Ja" + "va"));
+        System.out.println("x".isEmpty() + " " + "   ".isBlank());
+        System.out.println(String.valueOf(3.0) + String.valueOf(true));
+        char[] cs = "hello".toCharArray();
+        System.out.println(cs.length + " " + cs[1]);
+        System.out.println(new String(cs, 1, 3));
+        System.out.println("Mississippi".replace("ss", "SS"));
+        System.out.println("a1b2c3".replaceAll("[0-9]", "#"));
+        System.out.println("%d items cost %.2f lei".formatted(3, 9.5));
+    }
+}
+--- out
+11
+J
+Java
+HELLO
+7 -1
+true
+-1
+1
+-2
+a-b-c
+hi|
+ababab
+4
+[1, 2, 3]
+x1cba
+true
+false true
+3.0true
+5 e
+ell
+MiSSiSSippi
+a#b#c#
+3 items cost 9.50 lei
+=== control flow
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int sum = 0;
+        for (int i = 1; i <= 10; i++) {
+            if (i % 2 == 0) continue;
+            sum += i;
+        }
+        System.out.println(sum);
+        int n = 0;
+        while (true) { n++; if (n == 5) break; }
+        System.out.println(n);
+        int k = 10;
+        do { k -= 3; } while (k > 0);
+        System.out.println(k);
+        outer:
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                if (i * j == 6) { System.out.println(i + "," + j); break outer; }
+            }
+        }
+        String day = "SAT";
+        switch (day) {
+            case "SAT":
+            case "SUN":
+                System.out.println("weekend");
+                break;
+            default:
+                System.out.println("weekday");
+        }
+        int x = 2;
+        switch (x) {
+            case 1: System.out.println("one");
+            case 2: System.out.println("two");
+            case 3: System.out.println("three");
+        }
+        String r = switch (x) {
+            case 1 -> "unu";
+            case 2 -> { String t = "do"; yield t + "i"; }
+            default -> "multe";
+        };
+        System.out.println(r);
+        System.out.println(x > 1 ? "mare" : "mic");
+    }
+}
+--- out
+25
+5
+-2
+2,3
+weekend
+two
+three
+doi
+mare
+=== arrays
+--- src
+import java.util.Arrays;
+public class Main {
+    public static void main(String[] args) {
+        int[] a = {5, 3, 8, 1};
+        Arrays.sort(a);
+        System.out.println(Arrays.toString(a));
+        int[][] g = new int[3][4];
+        g[1][2] = 7;
+        System.out.println(g.length + " " + g[0].length + " " + g[1][2]);
+        System.out.println(Arrays.deepToString(new int[][]{{1, 2}, {3}}));
+        double[] d = new double[2];
+        System.out.println(d[0]);
+        String[] s = new String[2];
+        System.out.println(s[1]);
+        int total = 0;
+        for (int v : a) total += v;
+        System.out.println(total);
+        int[] c = Arrays.copyOf(a, 6);
+        System.out.println(Arrays.toString(c));
+        boolean[] flags = new boolean[3];
+        System.out.println(flags[2]);
+        char[] word = {'J', 'a', 'v', 'a'};
+        System.out.println(word);
+        System.out.println(Arrays.stream(a).sum() + " " + Arrays.stream(a).max().getAsInt());
+    }
+}
+--- out
+[1, 3, 5, 8]
+3 4 7
+[[1, 2], [3]]
+0.0
+null
+17
+[1, 3, 5, 8, 0, 0]
+false
+Java
+17 8
+=== oop basics
+--- src
+public class Main {
+    static class Counter {
+        private int value;
+        private static int instances = 0;
+        Counter() { this(0); }
+        Counter(int start) { value = start; instances++; }
+        void inc() { value++; }
+        int get() { return value; }
+        static int count() { return instances; }
+        @Override
+        public String toString() { return "Counter(" + value + ")"; }
+    }
+    public static void main(String[] args) {
+        Counter a = new Counter();
+        Counter b = new Counter(10);
+        a.inc(); a.inc(); b.inc();
+        System.out.println(a.get() + " " + b.get());
+        System.out.println(Counter.count());
+        System.out.println(a);
+        System.out.println("b=" + b);
+    }
+}
+--- out
+2 11
+2
+Counter(2)
+b=Counter(11)
+=== inheritance polymorphism
+--- src
+abstract class Shape {
+    protected String name;
+    Shape(String name) { this.name = name; }
+    abstract double area();
+    String describe() { return name + " with area " + String.format("%.2f", area()); }
+}
+class Circle extends Shape {
+    private double r;
+    Circle(double r) { super("Circle"); this.r = r; }
+    @Override double area() { return Math.PI * r * r; }
+}
+class Rectangle extends Shape {
+    protected double w, h;
+    Rectangle(double w, double h) { super("Rectangle"); this.w = w; this.h = h; }
+    double area() { return w * h; }
+}
+class Square extends Rectangle {
+    Square(double s) { super(s, s); name = "Square"; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Shape[] shapes = { new Circle(1), new Rectangle(2, 3), new Square(2) };
+        double total = 0;
+        for (Shape s : shapes) {
+            System.out.println(s.describe());
+            total += s.area();
+        }
+        System.out.printf("Total: %.3f%n", total);
+        System.out.println(shapes[2] instanceof Rectangle);
+        System.out.println(shapes[0] instanceof Rectangle);
+        Object o = shapes[1];
+        if (o instanceof Rectangle r && r.w > 1) System.out.println("wide " + r.w);
+    }
+}
+--- out
+Circle with area 3.14
+Rectangle with area 6.00
+Square with area 4.00
+Total: 13.142
+true
+false
+wide 2.0
+=== interfaces default methods
+--- src
+interface Greeter {
+    String name();
+    default String greet() { return "Salut, " + name() + "!"; }
+    static Greeter of(String n) { return () -> n; }
+}
+class Student implements Greeter, Comparable<Student> {
+    private final String n; private final int grade;
+    Student(String n, int grade) { this.n = n; this.grade = grade; }
+    public String name() { return n; }
+    public int getGrade() { return grade; }
+    public int compareTo(Student o) { return Integer.compare(grade, o.grade); }
+}
+public class Main {
+    public static void main(String[] args) {
+        Student s = new Student("Ana", 9);
+        System.out.println(s.greet());
+        java.util.List<Student> list = new java.util.ArrayList<>();
+        list.add(new Student("Dan", 7)); list.add(s); list.add(new Student("Ion", 10));
+        java.util.Collections.sort(list);
+        for (Student x : list) System.out.print(x.name() + " ");
+        System.out.println();
+        Greeter g = Greeter.of("Lume");
+        System.out.println(g.name());
+    }
+}
+--- out
+Salut, Ana!
+Dan Ana Ion
+Lume
+=== collections
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> nums = new ArrayList<>(List.of(5, 2, 9, 2));
+        nums.add(7);
+        nums.remove(Integer.valueOf(2));
+        nums.remove(0);
+        System.out.println(nums + " size=" + nums.size());
+        Map<String, Integer> ages = new HashMap<>();
+        ages.put("Ana", 21); ages.put("Dan", 23); ages.put("Ion", 19); ages.put("Maria", 22);
+        System.out.println(ages);
+        System.out.println(ages.get("Dan") + " " + ages.get("Nobody") + " " + ages.getOrDefault("X", 0));
+        Map<String, Integer> tm = new TreeMap<>(ages);
+        System.out.println(tm);
+        Set<String> set = new HashSet<>(List.of("pear", "apple", "fig", "banana", "kiwi"));
+        System.out.println(set);
+        Set<Integer> ints = new HashSet<>();
+        for (int i = 20; i >= 0; i -= 4) ints.add(i);
+        System.out.println(ints);
+        Map<Character, Integer> freq = new TreeMap<>();
+        for (char c : "banana".toCharArray()) freq.merge(c, 1, Integer::sum);
+        System.out.println(freq);
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(1); stack.push(2); stack.push(3);
+        System.out.println(stack.pop() + " " + stack);
+        Queue<String> q = new LinkedList<>();
+        q.offer("a"); q.offer("b");
+        System.out.println(q.poll() + q.peek());
+        PriorityQueue<Integer> pq = new PriorityQueue<>(List.of(5, 1, 4, 2, 3));
+        System.out.println(pq);
+        StringBuilder out = new StringBuilder();
+        while (!pq.isEmpty()) out.append(pq.poll());
+        System.out.println(out);
+        for (Map.Entry<String, Integer> e : tm.entrySet()) System.out.print(e.getKey() + "=" + e.getValue() + ";");
+        System.out.println();
+        Stack<Integer> st = new Stack<>();
+        st.push(1); st.push(2);
+        System.out.println(st + " " + st.peek());
+    }
+}
+--- out
+[9, 2, 7] size=3
+{Ana=21, Dan=23, Ion=19, Maria=22}
+23 null 0
+{Ana=21, Dan=23, Ion=19, Maria=22}
+[banana, apple, pear, kiwi, fig]
+[0, 16, 4, 20, 8, 12]
+{a=3, b=1, n=2}
+3 [2, 1]
+ab
+[1, 2, 4, 5, 3]
+12345
+Ana=21;Dan=23;Ion=19;Maria=22;
+[1, 2] 2
+=== exceptions
+--- src
+public class Main {
+    static class CourseNotFoundException extends Exception {
+        CourseNotFoundException(String msg) { super(msg); }
+    }
+    static int find(String name) throws CourseNotFoundException {
+        if (!name.equals("Java")) throw new CourseNotFoundException("Course not found: " + name);
+        return 42;
+    }
+    public static void main(String[] args) {
+        try {
+            int x = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("Caught: " + e.getMessage());
+        }
+        try {
+            int[] a = new int[3];
+            a[3] = 1;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(e.getMessage());
+        } finally {
+            System.out.println("finally");
+        }
+        try {
+            Integer.parseInt("12a");
+        } catch (NumberFormatException e) {
+            System.out.println(e);
+        }
+        try {
+            System.out.println(find("Java"));
+            find("Python");
+        } catch (CourseNotFoundException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e);
+        }
+        try {
+            String s = null;
+            s.length();
+        } catch (NullPointerException | IllegalStateException e) {
+            System.out.println("NPE");
+        }
+        try {
+            throw new IllegalArgumentException("bad");
+        } catch (RuntimeException e) {
+            System.out.println(e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
+        System.out.println(test());
+    }
+    static int test() {
+        try { return 1; } finally { System.out.println("in finally"); }
+    }
+}
+--- out
+Caught: / by zero
+Index 3 out of bounds for length 3
+finally
+java.lang.NumberFormatException: For input string: "12a"
+42
+Course not found: Python
+CourseNotFoundException: Course not found: Python
+NPE
+IllegalArgumentException: bad
+in finally
+1
+=== uncaught exception trace
+--- src
+public class Main {
+    static int divide(int a, int b) {
+        return a / b;
+    }
+    public static void main(String[] args) {
+        System.out.println("start");
+        divide(4, 0);
+    }
+}
+--- out
+start
+--- err
+Exception in thread "main" java.lang.ArithmeticException: / by zero
+	at Main.divide(Main.java:3)
+	at Main.main(Main.java:7)
+=== records sealed pattern switch
+--- src
+sealed interface Shape permits Circle, Rect {}
+record Circle(double r) implements Shape {}
+record Rect(double w, double h) implements Shape {
+    Rect {
+        if (w < 0 || h < 0) throw new IllegalArgumentException("negative");
+    }
+    double area() { return w * h; }
+}
+public class Main {
+    static double area(Shape s) {
+        return switch (s) {
+            case Circle c -> Math.PI * c.r() * c.r();
+            case Rect(double w, double h) -> w * h;
+        };
+    }
+    static String size(Shape s) {
+        return switch (s) {
+            case Circle c when c.r() > 10 -> "big circle";
+            case Circle c -> "circle";
+            case Rect r -> "rect " + r.area();
+        };
+    }
+    public static void main(String[] args) {
+        Shape a = new Circle(1), b = new Rect(2, 3);
+        System.out.printf("%.4f %.1f%n", area(a), area(b));
+        System.out.println(size(new Circle(20)) + ", " + size(a) + ", " + size(b));
+        System.out.println(b);
+        System.out.println(new Rect(2, 3).equals(b) + " " + (new Rect(2, 3) == b));
+        try { new Rect(-1, 2); } catch (IllegalArgumentException e) { System.out.println(e.getMessage()); }
+        record Point(int x, int y) {}
+        var p = new Point(3, 4);
+        System.out.println(p.x() + p.y() + " " + p);
+        Object o = p;
+        if (o instanceof Point(int x, int y) && x < y) System.out.println("x<y");
+    }
+}
+--- out
+3.1416 6.0
+big circle, circle, rect 6.0
+Rect[w=2.0, h=3.0]
+true false
+negative
+7 Point[x=3, y=4]
+x<y
+=== enums
+--- src
+enum Level { WOOD, BRONZE, SILVER, GOLD, LEGEND;
+    Level next() { return this == LEGEND ? LEGEND : values()[ordinal() + 1]; }
+}
+public class Main {
+    public static void main(String[] args) {
+        Level l = Level.BRONZE;
+        System.out.println(l + " " + l.ordinal() + " " + l.next());
+        for (Level x : Level.values()) System.out.print(x.name().charAt(0));
+        System.out.println();
+        switch (l) {
+            case WOOD -> System.out.println("start");
+            case BRONZE, SILVER -> System.out.println("middle");
+            default -> System.out.println("top");
+        }
+        System.out.println(Level.valueOf("GOLD").compareTo(Level.WOOD));
+    }
+}
+--- out
+BRONZE 1 SILVER
+WBSGL
+middle
+3
+=== lambdas streams
+--- src
+import java.util.*;
+import java.util.stream.*;
+public class Main {
+    record Student(String name, int group, double grade) {}
+    public static void main(String[] args) {
+        List<Student> st = List.of(
+            new Student("Ana", 1, 9.5), new Student("Dan", 2, 7.0),
+            new Student("Ion", 1, 8.0), new Student("Eva", 2, 10.0), new Student("Bob", 3, 6.5));
+        List<String> good = st.stream().filter(s -> s.grade() >= 8).map(Student::name).sorted().toList();
+        System.out.println(good);
+        Map<Integer, Long> perGroup = st.stream().collect(Collectors.groupingBy(Student::group, Collectors.counting()));
+        System.out.println(perGroup);
+        System.out.println(st.stream().mapToDouble(Student::grade).average().orElse(0));
+        System.out.println(st.stream().map(Student::name).collect(Collectors.joining(", ", "[", "]")));
+        Optional<Student> best = st.stream().max(Comparator.comparingDouble(Student::grade));
+        System.out.println(best.get().name());
+        System.out.println(IntStream.rangeClosed(1, 5).map(x -> x * x).sum());
+        System.out.println(Stream.iterate(1, x -> x * 2).limit(6).collect(Collectors.toList()));
+        System.out.println(st.stream().sorted(Comparator.comparing(Student::group).thenComparing(Student::name, Comparator.reverseOrder())).map(Student::name).toList());
+        Map<Boolean, List<String>> passed = st.stream().collect(Collectors.partitioningBy(s -> s.grade() >= 7, Collectors.mapping(Student::name, Collectors.toList())));
+        System.out.println(passed);
+        System.out.println("hello".chars().filter(c -> c == 'l').count());
+        System.out.println(Stream.of("a", "bb", "ccc").collect(Collectors.toMap(s -> s, String::length)));
+        System.out.println(Arrays.stream(new int[]{3, 1, 2}).boxed().sorted(Comparator.reverseOrder()).toList());
+        System.out.println(st.stream().anyMatch(s -> s.grade() == 10.0) + " " + st.stream().allMatch(s -> s.grade() > 7));
+        java.util.function.Function<Integer, Integer> twice = x -> x * 2;
+        java.util.function.Function<Integer, Integer> inc = x -> x + 1;
+        System.out.println(twice.andThen(inc).apply(5) + " " + twice.compose(inc).apply(5));
+        Runnable r = () -> System.out.println("run!");
+        r.run();
+        System.out.println(st.stream().map(Student::grade).reduce(0.0, Double::sum));
+        System.out.println(IntStream.range(0, 5).mapToObj(i -> "#" + i).collect(Collectors.joining()));
+        System.out.println(Optional.empty() + " " + Optional.of(5));
+    }
+}
+--- out
+[Ana, Eva, Ion]
+{1=2, 2=2, 3=1}
+8.2
+[Ana, Dan, Ion, Eva, Bob]
+Eva
+55
+[1, 2, 4, 8, 16, 32]
+[Ion, Ana, Eva, Dan, Bob]
+{false=[Bob], true=[Ana, Dan, Ion, Eva]}
+2
+{bb=2, a=1, ccc=3}
+[3, 2, 1]
+true false
+11 12
+run!
+41.0
+#0#1#2#3#4
+Optional.empty Optional[5]
+=== text blocks var
+--- src
+public class Main {
+    public static void main(String[] args) {
+        String json = """
+            {
+              "curs": "Java",
+              "an": 2
+            }
+            """;
+        System.out.print(json);
+        var list = new java.util.ArrayList<String>();
+        list.add("x");
+        var n = 10;
+        var d = 2.5;
+        System.out.println(list + " " + (n * d));
+        String t = """
+            one \
+            line""";
+        System.out.println(t);
+    }
+}
+--- out
+{
+  "curs": "Java",
+  "an": 2
+}
+[x] 25.0
+one line
+=== java25 compact source
+--- nojava
+--- src
+int counter = 0;
+
+void bump() { counter++; }
+
+void main() {
+    bump(); bump();
+    IO.println("counter = " + counter);
+    System.out.println(square(7));
+}
+
+static int square(int x) { return x * x; }
+--- out
+counter = 2
+49
+=== recursion
+--- src
+public class Main {
+    static long fact(int n) { return n <= 1 ? 1 : n * fact(n - 1); }
+    static int fib(int n) { return n < 2 ? n : fib(n - 1) + fib(n - 2); }
+    static int sumTo(int n) { if (n == 0) return 0; return n + sumTo(n - 1); }
+    public static void main(String[] args) {
+        System.out.println(fact(15));
+        System.out.println(fib(20));
+        System.out.println(sumTo(500));
+    }
+}
+--- out
+1307674368000
+6765
+245350
+=== stack overflow
+--- src
+public class Main {
+    static int f(int n) { return f(n + 1); }
+    public static void main(String[] args) {
+        try { f(0); } catch (StackOverflowError e) { System.out.println("SO caught"); }
+    }
+}
+--- out
+SO caught
+=== scanner stdin
+--- stdin
+3
+4 5 6
+Ana Popescu
+--- src
+import java.util.Scanner;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int s = 0;
+        for (int i = 0; i < n; i++) s += sc.nextInt();
+        sc.nextLine();
+        String name = sc.nextLine();
+        System.out.println(s + " " + name);
+        System.out.println(sc.hasNextLine());
+    }
+}
+--- out
+15 Ana Popescu
+false
+=== printf formats
+--- src
+public class Main {
+    public static void main(String[] args) {
+        System.out.printf("[%5d][%-5d][%05d]%n", 42, 42, 42);
+        System.out.printf("[%8.3f][%-8.2f][%.0f]%n", Math.PI, 2.5, 2.5);
+        System.out.printf("%s has %d%% %c %b%n", "Ana", 90, 'A', true);
+        System.out.printf("%,d %x %X%n", 1234567, 255, 255);
+        System.out.println(String.format("%.1f %.2f %.2f", 0.15, 1.005, 0.125));
+        System.out.println(String.format("%10s|%-10s|", "dreapta", "stanga"));
+        System.out.printf("%e%n", 12345.678);
+    }
+}
+--- out
+[   42][42   ][00042]
+[   3.142][2.50    ][3]
+Ana has 90% A true
+1,234,567 ff FF
+0.2 1.01 0.13
+   dreapta|stanga    |
+1.234568e+04
+=== printf wrong type
+--- src
+public class Main {
+    public static void main(String[] args) {
+        System.out.printf("%f%n", 5);
+    }
+}
+--- out
+--- err
+Exception in thread "main" java.util.IllegalFormatConversionException: f != java.lang.Integer
+=== anonymous classes and comparators
+--- src
+import java.util.*;
+public class Main {
+    interface Op { int apply(int a, int b); }
+    public static void main(String[] args) {
+        List<String> words = new ArrayList<>(List.of("banana", "kiwi", "apple", "fig"));
+        Collections.sort(words, new Comparator<String>() {
+            @Override public int compare(String a, String b) { return a.length() - b.length(); }
+        });
+        System.out.println(words);
+        words.sort(Comparator.naturalOrder());
+        System.out.println(words);
+        words.sort(Comparator.comparing(String::length).reversed());
+        System.out.println(words);
+        Op add = (a, b) -> a + b;
+        Op mul = new Op() { public int apply(int a, int b) { return a * b; } };
+        System.out.println(add.apply(3, 4) + " " + mul.apply(3, 4));
+        int base = 100;
+        Op plusBase = (a, b) -> a + b + base;
+        System.out.println(plusBase.apply(1, 2));
+    }
+}
+--- out
+[fig, kiwi, apple, banana]
+[apple, banana, fig, kiwi]
+[banana, apple, kiwi, fig]
+7 12
+103
+=== static nested generics
+--- src
+import java.util.*;
+public class Main {
+    static class Box<T> {
+        private T value;
+        Box(T value) { this.value = value; }
+        T get() { return value; }
+        <R> Box<R> map(java.util.function.Function<T, R> f) { return new Box<>(f.apply(value)); }
+    }
+    static <T extends Comparable<T>> T maxOf(List<T> xs) {
+        T best = xs.get(0);
+        for (T x : xs) if (x.compareTo(best) > 0) best = x;
+        return best;
+    }
+    public static void main(String[] args) {
+        Box<Integer> b = new Box<>(21);
+        System.out.println(b.map(x -> x * 2).get());
+        System.out.println(maxOf(List.of(3, 9, 2)) + " " + maxOf(List.of("pear", "zebra", "apple")));
+        Map<String, List<Integer>> m = new TreeMap<>();
+        m.computeIfAbsent("a", k -> new ArrayList<>()).add(1);
+        m.computeIfAbsent("a", k -> new ArrayList<>()).add(2);
+        m.computeIfAbsent("b", k -> new ArrayList<>()).add(3);
+        System.out.println(m);
+    }
+}
+--- out
+42
+9 zebra
+{a=[1, 2], b=[3]}
+=== compile error missing semicolon
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int x = 5
+        System.out.println(x);
+    }
+}
+--- compile
+';' expected
+=== compile error undefined variable
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int total = 0;
+        System.out.println(totl);
+    }
+}
+--- compile
+cannot find symbol
+=== type error string to int
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int x = "5";
+    }
+}
+--- compile
+incompatible types: String cannot be converted to int
+=== lossy double to int
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int avg = 7 / 2.0;
+    }
+}
+--- compile
+possible lossy conversion from double to int
+=== private access
+--- src
+class Account {
+    private double balance;
+}
+public class Main {
+    public static void main(String[] args) {
+        Account a = new Account();
+        a.balance = 100;
+    }
+}
+--- compile
+balance has private access in Account
+=== abstract instantiation
+--- src
+abstract class Animal { abstract String sound(); }
+public class Main {
+    public static void main(String[] args) {
+        Animal a = new Animal();
+    }
+}
+--- compile
+Animal is abstract; cannot be instantiated
+=== missing override
+--- src
+interface Shape { double area(); }
+class Sq implements Shape { double side = 2; }
+public class Main {
+    public static void main(String[] args) { System.out.println(new Sq().side); }
+}
+--- compile
+Sq is not abstract and does not override abstract method area() in Shape
+=== static context
+--- src
+public class Main {
+    int count = 0;
+    public static void main(String[] args) {
+        count++;
+    }
+}
+--- compile
+non-static variable count cannot be referenced from a static context
+=== missing return
+--- src
+public class Main {
+    static int sign(int x) {
+        if (x > 0) return 1;
+        else if (x < 0) return -1;
+    }
+    public static void main(String[] args) { System.out.println(sign(0)); }
+}
+--- compile
+missing return statement
+=== uninitialized
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int x;
+        System.out.println(x);
+    }
+}
+--- compile
+variable x might not have been initialized
+=== final reassign
+--- src
+public class Main {
+    public static void main(String[] args) {
+        final int LIMIT = 10;
+        LIMIT = 20;
+    }
+}
+--- compile
+cannot assign a value to final variable LIMIT
+=== duplicate variable
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int i = 0;
+        for (int i = 0; i < 3; i++) {}
+    }
+}
+--- compile
+variable i is already defined
+=== infinite loop limit
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int i = 0;
+        while (i < 10) { System.out.print(""); }
+    }
+}
+--- limit
+=== concurrent modification
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> xs = new ArrayList<>(List.of(1, 2, 3, 4));
+        try {
+            for (Integer x : xs) if (x == 2) xs.remove(x);
+        } catch (ConcurrentModificationException e) { System.out.println("CME"); }
+        List<Integer> ys = new ArrayList<>(List.of(1, 2, 3));
+        for (Integer y : ys) if (y == 2) ys.remove(y);
+        System.out.println(ys);
+        xs.removeIf(x -> x % 2 == 1);
+        System.out.println(xs);
+        Iterator<Integer> it = ys.iterator();
+        while (it.hasNext()) if (it.next() == 1) it.remove();
+        System.out.println(ys);
+    }
+}
+--- out
+CME
+[1, 3]
+[4]
+[3]
+=== immutable list
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        List<String> days = List.of("Mon", "Tue");
+        try { days.add("Wed"); } catch (UnsupportedOperationException e) { System.out.println("immutable"); }
+        List<Integer> a = Arrays.asList(1, 2, 3);
+        a.set(0, 9);
+        System.out.println(a);
+        try { a.add(4); } catch (UnsupportedOperationException e) { System.out.println("fixed size"); }
+    }
+}
+--- out
+immutable
+[9, 2, 3]
+fixed size
+=== threads simulated
+--- src
+import java.util.concurrent.atomic.AtomicInteger;
+public class Main {
+    static int counter = 0;
+    static synchronized void inc() { counter++; }
+    public static void main(String[] args) throws InterruptedException {
+        AtomicInteger at = new AtomicInteger();
+        Runnable task = () -> { for (int i = 0; i < 1000; i++) { inc(); at.incrementAndGet(); } };
+        Thread t1 = new Thread(task), t2 = new Thread(task);
+        t1.start(); t2.start();
+        t1.join(); t2.join();
+        System.out.println(counter + " " + at.get());
+        Thread w = new Thread(() -> System.out.println("worker: " + Thread.currentThread().getName()), "W1");
+        w.start();
+    }
+}
+--- out
+2000 2000
+worker: W1
+=== user class extends thread
+--- src
+class Worker extends Thread {
+    private final int id;
+    Worker(int id) { this.id = id; }
+    @Override public void run() { System.out.println("worker " + id); }
+}
+public class Main {
+    public static void main(String[] args) throws Exception {
+        Worker a = new Worker(1);
+        a.start();
+        a.join();
+    }
+}
+--- out
+worker 1
+=== equals hashcode in hashmap
+--- src
+import java.util.*;
+class P {
+    int x, y;
+    P(int x, int y) { this.x = x; this.y = y; }
+    @Override public boolean equals(Object o) { return o instanceof P p && p.x == x && p.y == y; }
+    @Override public int hashCode() { return Objects.hash(x, y); }
+}
+public class Main {
+    public static void main(String[] args) {
+        Set<P> s = new HashSet<>();
+        s.add(new P(1, 2)); s.add(new P(1, 2)); s.add(new P(2, 1));
+        System.out.println(s.size());
+        System.out.println(s.contains(new P(2, 1)));
+        System.out.println(Objects.hash(1, 2));
+    }
+}
+--- out
+2
+true
+994
+=== char arithmetic
+--- src
+public class Main {
+    public static void main(String[] args) {
+        char c = 'a';
+        c++;
+        c += 2;
+        System.out.println(c);
+        int d = '7' - '0';
+        System.out.println(d);
+        String s = "";
+        for (char ch = 'A'; ch <= 'E'; ch++) s += ch;
+        System.out.println(s);
+        System.out.println(Character.isDigit('5') + " " + Character.toUpperCase('q') + " " + (int) 'A');
+        System.out.println("x" + 'y' + 'z');
+        System.out.println('y' + 'z' + "x");
+    }
+}
+--- out
+d
+7
+ABCDE
+true Q 65
+xyz
+243x
+=== integer caching and boxing ops
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> xs = new ArrayList<>();
+        for (int i = 0; i < 5; i++) xs.add(i * i);
+        int sum = 0;
+        for (int x : xs) sum += x;
+        System.out.println(sum + " " + xs.indexOf(9) + " " + xs.contains(16));
+        Integer a = 5;
+        int b = a + 1;
+        System.out.println(b + " " + a.equals(5) + " " + Integer.compare(3, 7));
+        Double avg = xs.stream().mapToInt(Integer::intValue).average().getAsDouble();
+        System.out.println(avg);
+    }
+}
+--- out
+30 3 true
+6 true -1
+6.0
+=== string switch pattern null
+--- src
+public class Main {
+    static String describe(Object o) {
+        return switch (o) {
+            case null -> "null!";
+            case Integer i when i > 100 -> "big int " + i;
+            case Integer i -> "int " + i;
+            case String s -> "string of length " + s.length();
+            default -> "other " + o;
+        };
+    }
+    public static void main(String[] args) {
+        System.out.println(describe(5));
+        System.out.println(describe(500));
+        System.out.println(describe("abc"));
+        System.out.println(describe(null));
+        System.out.println(describe(2.5));
+    }
+}
+--- out
+int 5
+big int 500
+string of length 3
+null!
+other 2.5
+=== interface constants and static methods
+--- src
+interface Config { int MAX = 3; static int twice(int x) { return 2 * x; } }
+public class Main implements Config {
+    public static void main(String[] args) {
+        System.out.println(MAX + Config.twice(MAX));
+    }
+}
+--- out
+9
+=== toString default
+--- src
+class Thing {}
+public class Main {
+    public static void main(String[] args) {
+        Thing t = new Thing();
+        System.out.println(t);
+        int[] a = {1, 2};
+        System.out.println(a);
+    }
+}
+--- out
+Thing@1b6d3586
+[I@4554617c
+=== lambda capture effectively final counter
+--- src
+import java.util.*;
+import java.util.function.*;
+public class Main {
+    public static void main(String[] args) {
+        Supplier<List<String>> sup = ArrayList::new;
+        List<String> l = sup.get();
+        l.add("ok");
+        BiFunction<Integer, Integer, Integer> pow = (b, e) -> { int r = 1; for (int i = 0; i < e; i++) r *= b; return r; };
+        Predicate<String> empty = String::isEmpty;
+        UnaryOperator<String> up = String::toUpperCase;
+        Consumer<String> printer = System.out::println;
+        printer.accept(l + " " + pow.apply(2, 10) + " " + empty.negate().test("") + " " + up.apply("java"));
+        IntBinaryOperator max = Math::max;
+        System.out.println(max.applyAsInt(3, 8));
+    }
+}
+--- out
+[ok] 1024 false JAVA
+8
+=== nested ternary and compound ops
+--- src
+public class Main {
+    public static void main(String[] args) {
+        int x = 15;
+        String r = x % 15 == 0 ? "FizzBuzz" : x % 3 == 0 ? "Fizz" : x % 5 == 0 ? "Buzz" : String.valueOf(x);
+        System.out.println(r);
+        int y = 10;
+        y *= 2 + 3;
+        y -= 5;
+        y /= 3;
+        y %= 4;
+        System.out.println(y);
+        int a = 5, b = a++ + ++a;
+        System.out.println(a + " " + b);
+        int i = 0;
+        i = i++ + i++;
+        System.out.println(i);
+        boolean t = true, f = false;
+        System.out.println((t ^ f) + " " + (t & f) + " " + (!t | f));
+        System.out.println(7 >> 1 | 1 << 3);
+    }
+}
+--- out
+FizzBuzz
+3
+7 12
+1
+true false false
+11

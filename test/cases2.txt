@@ -1,0 +1,380 @@
+=== constructors order super
+--- src
+class Person {
+    protected String name;
+    Person(String name) { this.name = name; System.out.println("Person(" + name + ")"); }
+    @Override public String toString() { return "Person " + name; }
+    String role() { return "person"; }
+}
+class Student extends Person {
+    private int year;
+    { System.out.println("init block"); }
+    Student(String name, int year) { super(name); this.year = year; System.out.println("Student(" + year + ")"); }
+    @Override public String toString() { return super.toString() + ", year " + year; }
+    @Override String role() { return "student/" + super.role(); }
+}
+class Professor extends Person {
+    Professor(String n) { super(n); }
+}
+public class Main {
+    public static void main(String[] args) {
+        Person p = new Student("Ana", 2);
+        System.out.println(p);
+        System.out.println(p.role());
+        Person q = new Professor("Pop");
+        System.out.println(q + " " + q.role());
+        System.out.println(p.getClass().getSimpleName() + " " + (p instanceof Student s ? s.toString().length() : -1));
+    }
+}
+--- out
+=== word count hashmap
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        String text = "the quick brown fox jumps over the lazy dog the end";
+        Map<String, Integer> count = new HashMap<>();
+        for (String w : text.split(" ")) count.put(w, count.getOrDefault(w, 0) + 1);
+        System.out.println(count);
+        Map<String, Integer> sorted = new TreeMap<>(count);
+        System.out.println(sorted);
+        List<Map.Entry<String, Integer>> es = new ArrayList<>(count.entrySet());
+        es.sort(Map.Entry.<String, Integer>comparingByValue().reversed());
+        System.out.println(es.get(0).getKey() + "=" + es.get(0).getValue());
+        Set<Character> letters = new HashSet<>();
+        for (char c : "programare".toCharArray()) letters.add(c);
+        System.out.println(letters);
+        Map<Integer, String> byLen = new HashMap<>();
+        for (String w : List.of("a", "bb", "ccc", "dddd", "eeeee", "ffffff", "ggggggg")) byLen.put(w.length() * 7, w);
+        System.out.println(byLen.keySet());
+    }
+}
+--- out
+=== records in sets
+--- src
+import java.util.*;
+public class Main {
+    record Point(int x, int y) {
+        static Point origin() { return new Point(0, 0); }
+        double dist() { return Math.sqrt(x * x + y * y); }
+    }
+    public static void main(String[] args) {
+        Set<Point> pts = new HashSet<>();
+        pts.add(new Point(1, 2)); pts.add(new Point(3, 4)); pts.add(new Point(1, 2)); pts.add(Point.origin()); pts.add(new Point(10, -3));
+        System.out.println(pts.size() + " " + pts);
+        System.out.println(new Point(3, 4).dist() + " " + new Point(1, 2).hashCode());
+        Map<Point, String> names = new HashMap<>();
+        names.put(new Point(2, 2), "B"); names.put(new Point(0, 1), "A");
+        System.out.println(names.get(new Point(2, 2)));
+    }
+}
+--- out
+=== enum with fields
+--- src
+enum Planet {
+    MERCURY(3.303e+23, 2.4397e6), EARTH(5.976e+24, 6.37814e6);
+    private final double mass, radius;
+    Planet(double mass, double radius) { this.mass = mass; this.radius = radius; }
+    double gravity() { return 6.67300E-11 * mass / (radius * radius); }
+}
+public class Main {
+    public static void main(String[] args) {
+        for (Planet p : Planet.values()) System.out.printf("%s %.2f%n", p, p.gravity());
+        System.out.println(Planet.EARTH.name().toLowerCase());
+    }
+}
+--- out
+=== exception chaining and custom trace
+--- src
+public class Main {
+    static class InsufficientFundsException extends RuntimeException {
+        private final double missing;
+        InsufficientFundsException(double missing) { super("Lipsesc " + missing + " lei"); this.missing = missing; }
+        double getMissing() { return missing; }
+    }
+    static void withdraw(double balance, double amount) {
+        if (amount > balance) throw new InsufficientFundsException(amount - balance);
+    }
+    public static void main(String[] args) {
+        try { withdraw(50, 80); }
+        catch (InsufficientFundsException e) { System.out.println(e.getMessage() + " / " + e.getMissing()); }
+        try {
+            try { Integer.parseInt("x"); }
+            catch (NumberFormatException e) { throw new IllegalStateException("config invalid", e); }
+        } catch (IllegalStateException e) {
+            System.out.println(e.getMessage() + " <- " + e.getCause().getClass().getName());
+        }
+        withdraw(1, 2);
+    }
+}
+--- out
+=== try with resources
+--- src
+public class Main {
+    static class Res implements AutoCloseable {
+        private final String n;
+        Res(String n) { this.n = n; System.out.println("open " + n); }
+        @Override public void close() { System.out.println("close " + n); }
+    }
+    public static void main(String[] args) {
+        try (Res a = new Res("A"); Res b = new Res("B")) {
+            System.out.println("work");
+            throw new RuntimeException("boom");
+        } catch (RuntimeException e) {
+            System.out.println("caught " + e.getMessage());
+        } finally {
+            System.out.println("done");
+        }
+    }
+}
+--- out
+=== math outputs
+--- src
+public class Main {
+    public static void main(String[] args) {
+        System.out.println(Math.sqrt(2));
+        System.out.println(Math.pow(2, 10));
+        System.out.println(Math.abs(-7) + " " + Math.abs(-7.5));
+        System.out.println(Math.max(3, 7.0));
+        System.out.println(Math.floor(-2.5) + " " + Math.ceil(2.1));
+        System.out.println(10 / 3.0);
+        System.out.println(2.0 / 3);
+        System.out.println(1.0 / 0);
+        System.out.println(0.1 * 3);
+        System.out.println(100.0);
+        System.out.println(123456789.0);
+        System.out.println(1234567.0);
+        System.out.println(0.001);
+        System.out.println((double) 1 / 3);
+        System.out.println(Math.PI);
+        double avg = (7 + 8 + 10) / 3;
+        System.out.println(avg);
+        System.out.println((7 + 8 + 10) / 3.0);
+        System.out.println(Double.compare(1.5, 2.5) + " " + Double.parseDouble("3.25"));
+        System.out.println((float) 0.1 + " " + 5f / 2);
+    }
+}
+--- out
+=== streams on lab data
+--- src
+import java.util.*;
+import java.util.stream.*;
+public class Main {
+    static class Student {
+        private final String name; private final String group; private final List<Integer> grades;
+        Student(String name, String group, Integer... grades) { this.name = name; this.group = group; this.grades = Arrays.asList(grades); }
+        String getName() { return name; } String getGroup() { return group; }
+        double average() { return grades.stream().mapToInt(Integer::intValue).average().orElse(0); }
+    }
+    public static void main(String[] args) {
+        List<Student> list = List.of(new Student("Ana", "4LF341", 9, 10, 8), new Student("Bogdan", "4LF342", 6, 7),
+                                     new Student("Carmen", "4LF341", 10, 10), new Student("Dan", "4LF342", 5, 4, 6));
+        Map<String, Double> avgByGroup = list.stream().collect(Collectors.groupingBy(Student::getGroup, TreeMap::new, Collectors.averagingDouble(Student::average)));
+        avgByGroup.forEach((g, a) -> System.out.printf("%s: %.2f%n", g, a));
+        String top = list.stream().sorted(Comparator.comparingDouble(Student::average).reversed()).limit(2).map(Student::getName).collect(Collectors.joining(" & "));
+        System.out.println(top);
+        System.out.println(list.stream().filter(s -> s.average() < 5).map(Student::getName).findFirst().orElse("nimeni"));
+        IntSummaryStatistics st = list.stream().flatMap(s -> s.grades.stream()).mapToInt(x -> x).summaryStatistics();
+        System.out.println(st.getMin() + " " + st.getMax() + " " + st.getCount() + " " + st.getAverage());
+        System.out.println(list.stream().collect(Collectors.groupingBy(Student::getGroup, Collectors.mapping(Student::getName, Collectors.toList()))));
+        List<List<Integer>> nested = List.of(List.of(1, 2), List.of(3), List.of());
+        System.out.println(nested + " " + nested.stream().mapToInt(List::size).sum());
+    }
+}
+--- out
+=== switch on char and labeled continue
+--- src
+public class Main {
+    public static void main(String[] args) {
+        String s = "a+b*c-d";
+        int ops = 0;
+        for (char c : s.toCharArray()) {
+            switch (c) {
+                case '+', '-' -> ops += 1;
+                case '*', '/' -> ops += 10;
+                default -> {}
+            }
+        }
+        System.out.println(ops);
+        outer:
+        for (int i = 2; i < 30; i++) {
+            for (int j = 2; j * j <= i; j++) if (i % j == 0) continue outer;
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        int vowels = 0;
+        for (char c : "Programare Orientata pe Obiecte".toLowerCase().toCharArray()) {
+            switch (c) { case 'a': case 'e': case 'i': case 'o': case 'u': vowels++; break; }
+        }
+        System.out.println(vowels);
+    }
+}
+--- out
+=== static init and counters
+--- src
+public class Main {
+    static int nextId = 100;
+    static final String PREFIX;
+    static { PREFIX = "ID-"; }
+    static String newId() { return PREFIX + (nextId++); }
+    public static void main(String[] args) {
+        System.out.println(newId() + " " + newId());
+        int[] counts = new int[5];
+        for (int v : new int[]{1, 3, 3, 4, 1, 1}) counts[v]++;
+        System.out.println(java.util.Arrays.toString(counts));
+        StringBuilder sb = new StringBuilder("Java");
+        sb.insert(0, "I love ").append('!').deleteCharAt(2);
+        System.out.println(sb + " " + sb.length() + " " + sb.indexOf("Java"));
+        System.out.println(Character.getNumericValue('8') + Integer.parseInt("-12") + Integer.valueOf("30"));
+        String bin = Integer.toBinaryString(10);
+        System.out.println(bin + " " + Integer.parseInt(bin, 2) + " " + Integer.toHexString(255));
+    }
+}
+--- out
+=== optional and null handling
+--- src
+import java.util.*;
+public class Main {
+    static Optional<String> findEmail(String user) {
+        Map<String, String> db = Map.of("ana", "ana@unitbv.ro");
+        return Optional.ofNullable(db.get(user));
+    }
+    public static void main(String[] args) {
+        System.out.println(findEmail("ana").map(String::toUpperCase).orElse("-"));
+        System.out.println(findEmail("dan").map(String::toUpperCase).orElse("-"));
+        System.out.println(findEmail("dan").isPresent() + " " + findEmail("ana"));
+        String s = null;
+        System.out.println("value: " + s);
+        System.out.println(Objects.requireNonNullElse(s, "default"));
+        try { findEmail("x").orElseThrow(); } catch (NoSuchElementException e) { System.out.println(e.getMessage()); }
+        try { s.length(); } catch (NullPointerException e) { System.out.println("NPE ok"); }
+    }
+}
+--- out
+=== interfaces polymorphism list
+--- src
+import java.util.*;
+interface Payable { double pay(); default String label() { return getClass().getSimpleName() + ": " + pay(); } }
+abstract class Employee implements Payable {
+    protected final String name;
+    Employee(String name) { this.name = name; }
+}
+class Salaried extends Employee {
+    private final double salary;
+    Salaried(String n, double s) { super(n); salary = s; }
+    public double pay() { return salary; }
+}
+class Hourly extends Employee {
+    private final double rate; private final int hours;
+    Hourly(String n, double rate, int hours) { super(n); this.rate = rate; this.hours = hours; }
+    public double pay() { return hours > 40 ? 40 * rate + (hours - 40) * rate * 1.5 : hours * rate; }
+}
+public class Main {
+    public static void main(String[] args) {
+        List<Payable> staff = new ArrayList<>();
+        staff.add(new Salaried("Ana", 5000));
+        staff.add(new Hourly("Dan", 30, 45));
+        staff.add(() -> 100.0);
+        double total = 0;
+        for (Payable p : staff) total += p.pay();
+        System.out.println(total);
+        System.out.println(staff.get(0).label());
+        System.out.println(staff.get(1).label());
+    }
+}
+--- out
+=== 2d grid and char matrix
+--- src
+public class Main {
+    public static void main(String[] args) {
+        String[] map = { "#####", "#S..#", "#.#.#", "#..E#", "#####" };
+        char[][] g = new char[map.length][];
+        for (int i = 0; i < map.length; i++) g[i] = map[i].toCharArray();
+        int free = 0;
+        for (char[] row : g) for (char c : row) if (c != '#') free++;
+        System.out.println(free);
+        g[1][2] = '*';
+        System.out.println(new String(g[1]));
+        int[][] dist = new int[3][3];
+        for (int[] row : dist) java.util.Arrays.fill(row, -1);
+        dist[0][0] = 0;
+        System.out.println(java.util.Arrays.deepToString(dist));
+    }
+}
+--- out
+=== uncaught custom checked
+--- src
+public class Main {
+    static class CourseNotFoundException extends Exception {
+        public CourseNotFoundException(String m) { super(m); }
+    }
+    static class Manager {
+        void find(String c) throws CourseNotFoundException { throw new CourseNotFoundException(c); }
+    }
+    public static void main(String[] args) throws Exception {
+        new Manager().find("POO");
+    }
+}
+--- out
+=== interface generic functional
+--- src
+import java.util.*;
+import java.util.function.*;
+public class Main {
+    @FunctionalInterface
+    interface Validator<T> { boolean validate(T t); }
+    static <T> List<T> keep(List<T> xs, Validator<T> v) {
+        List<T> out = new ArrayList<>();
+        for (T x : xs) if (v.validate(x)) out.add(x);
+        return out;
+    }
+    public static void main(String[] args) {
+        System.out.println(keep(List.of(1, 5, 12, 7, 20), x -> x > 6));
+        System.out.println(keep(List.of("ana", "", "ion"), s -> !s.isEmpty()));
+        BinaryOperator<Integer> add = Integer::sum;
+        Function<String, Integer> len = String::length;
+        Supplier<Double> pi = () -> Math.PI;
+        System.out.println(add.apply(2, 3) + len.apply("Java") + " " + pi.get());
+        Map<String, Function<Double, Double>> ops = new LinkedHashMap<>();
+        ops.put("dublu", x -> x * 2); ops.put("patrat", x -> x * x);
+        ops.forEach((k, f) -> System.out.println(k + " " + f.apply(3.0)));
+    }
+}
+--- out
+=== list of lists and sorting strings
+--- src
+import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        String[] names = { "maria", "Ana", "dan", "Bogdan" };
+        Arrays.sort(names);
+        System.out.println(Arrays.toString(names));
+        Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
+        System.out.println(Arrays.toString(names));
+        Arrays.sort(names, (a, b) -> b.length() - a.length());
+        System.out.println(String.join(",", names));
+        List<String> l = new ArrayList<>(Arrays.asList(names));
+        Collections.reverse(l);
+        System.out.println(l + " " + Collections.max(l) + " " + Collections.min(l, Comparator.comparing(String::length)));
+        System.out.println(l.subList(1, 3) + " " + l.indexOf("dan") + " " + l.contains("Ana"));
+    }
+}
+--- out
+=== integer edge and parse errors
+--- src
+public class Main {
+    public static void main(String[] args) {
+        String[] inputs = { "42", " 7", "-0", "3.5", "", "2147483648", "+15" };
+        for (String in : inputs) {
+            try { System.out.println(Integer.parseInt(in)); }
+            catch (NumberFormatException e) { System.out.println("NFE: " + e.getMessage()); }
+        }
+        try { Object o = "text"; Integer i = (Integer) o; }
+        catch (ClassCastException e) { System.out.println("CCE"); }
+        int[] arr = new int[2];
+        try { arr[-1] = 3; } catch (ArrayIndexOutOfBoundsException e) { System.out.println(e.getMessage()); }
+        try { "abc".substring(2, 5); } catch (StringIndexOutOfBoundsException e) { System.out.println(e.getMessage()); }
+        try { java.util.List.of(1).get(3); } catch (IndexOutOfBoundsException e) { System.out.println(e.getClass().getSimpleName()); }
+    }
+}
+--- out
